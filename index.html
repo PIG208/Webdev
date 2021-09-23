@@ -7,14 +7,26 @@
     <body>
         <header>Homepage</header>
         <main>
-            <h1>Home</h1>
-            <img class="centered" src="assets/static/dinosaur.png"/>
-            <p>This is the homepage, which is still underconstruction.</p>
-            <h2>Articles</h2>
-            <a href="articles/reflection.html">Reflection</a>
-            <h2>About Me</h2>
-            <a href="https://github.com/PIG208">GitHub</a>
+            <div class="page">
+                <div class="big-text">
+                    <h1 class="centered">Home</h1>
+                </div>
+                <img src="assets/static/dinosaur.png"/>
+                <p>This is the homepage, which is still underconstruction.</p>
+            </div>
+            <div class="page">
+                <h2>Articles</h2>
+                <a href="articles/reflection.html">Reflection</a>
+            </div>
+            <div class="page">
+                <h2>About Me</h2>
+                <a href="https://github.com/PIG208">GitHub</a>
+            </div>
+            <button onclick="loadNext();" class="centered">Next</button>
         </main>
     </body>
-    <script src="assets/js/index.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script>
+        loadNext();
+    </script>
 </html>
