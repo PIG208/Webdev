@@ -1,3 +1,5 @@
+/* Common style for html tags */
+
 body {
   font-family: monospace;
   margin: 0;
@@ -33,11 +35,15 @@ button:hover {
   background-color: #6a6a6a;
 }
 
+/* Good for positioning */
+
 .centered {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
 }
+
+/* Typography */
 
 .big-text {
   width: 100%;
@@ -47,6 +53,8 @@ button:hover {
   font-size: 5rem;
   text-align: center;
 }
+
+/* Multi-page support */
 
 .page {
   display: none;
