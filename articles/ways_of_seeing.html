@@ -9,10 +9,21 @@
 </head>
 <body>
     <header>
+        Articles - Ways of Seeing
     </header>
-    <main>
+    <main class="spaced extra-bottom-margin">
         <div class="big-text">
             <h1>Ways of Seeing</h1>
+        </div>
+        <div class="full-width-self">
+            <div class="horizontal-flex half-width centered">
+                <img src="../assets/static/ways_of_seeing/cover.png"/>
+                <img src="../assets/static/ways_of_seeing/pic1.png"/>
+                <img src="../assets/static/ways_of_seeing/pic2.png"/>
+                <img src="../assets/static/ways_of_seeing/pic3.png"/>
+                <img src="../assets/static/ways_of_seeing/pic4.png"/>
+                <img src="../assets/static/ways_of_seeing/pic5.png"/>
+            </div>
         </div>
         <div class="horizontal-flex">
             <div class="vertical-flex half-width-md full-width">
@@ -33,9 +44,59 @@
             </div>
         </div>
         <div class="paragraphs">
-            <p>Image</p>
+            <p>The web is the most versatile form of media. It encapulates artworks of any forms, from Renaissance paintings to modern advertisment photography, with bytes transferring at light speed through intercontinental cables, and presents them to more audiences than there were ever before, with the cost of authenticity.</p>
+            <p>Make your own combination of perspective, and click the Start button to experience it. (It might take multiple attempts to load the sound)</p>
         </div>
+        <div class="horizontal-flex flex-justify-start flex-align-start full-width">
+            <div class="multi-select padded" id="select-image">
+                <h2>What you see</h2>
+                <button data-value="../assets/static/ways_of_seeing/the-creation-of-adam.jpg">Worshipness</button>
+                <button data-value="../assets/static/ways_of_seeing/the-ambassadors.jpg">Prosperity</button>
+                <button data-value="../assets/static/ways_of_seeing/cigarette.jpg">Publicity</button>
+                <button data-value="../assets/static/ways_of_seeing/nude-maja.jpg">Nakedness</button>
+            </div>
+            <div class="multi-select padded right-aligned" id="select-sound">
+                <h2>What you hear</h2>
+                <!-- The data-value for the following buttons are video ids of Youtube -->
+                <button data-value="-4kTei0XrCs">Joyfulness</button>
+                <button data-value="iOkrgQNXTyI">Sadness</button>
+                <button data-value="4g6oSAUQdwY">Divineness</button>
+            </div>
+        </div>
+        <button class="centered" id="btn-start">Start</button>
+        <div class="paragraphs">
+            <p id="err-msg" class="hidden">You need to select first.</p>
+        </div>
+        <div id="display" class="horizontal-flex full-width hidden">
+            <img alt="The image should be here"/>
+        </div>
+        <iframe id="sound" width="1" height="1" wmode="transparent" frameborder="0" allowfullscreen></iframe>
     </main>
-    <script type="module" src="../assets/js/utils.js"></script>
+    <script type="module">
+        import loadAll from "../assets/js/utils.js";
+
+        loadAll();
+
+        const getSoundUrl = (url) => `//www.youtube.com/embed/VIDEO_ID?autoplay=1&loop=1&playlist=${url}`;
+
+        function handleStart() {
+            let image = document.getElementById("select-image").getAttribute("data-selected");
+            let sound = document.getElementById("select-sound").getAttribute("data-selected");
+            if(!!image && !!sound) {
+                document.getElementById("display").getElementsByTagName("img")[0].setAttribute("src", image);
+                document.getElementById("display").classList.remove("hidden");
+                
+                document.getElementById("sound").setAttribute("src", getSoundUrl(sound));
+
+                document.getElementById("err-msg").classList.add("hidden");
+            }
+            else {
+                document.getElementById("display").classList.add("hidden");
+                document.getElementById("err-msg").classList.remove("hidden");
+            }
+        };
+
+        document.getElementById("btn-start").addEventListener("click", handleStart);
+    </script>
 </body>
 </html>

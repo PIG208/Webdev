@@ -3,6 +3,7 @@
 body {
   font-family: monospace;
   margin: 0;
+  overflow-x: hidden;
 }
 
 header {
@@ -15,12 +16,21 @@ header {
 
 main {
   width: 70vw;
+  max-width: 700px;
   min-height: 100vh;
   margin: auto;
 }
 
 .overlap-header {
   margin-top: -3.5rem;
+}
+
+.spaced > div {
+  margin-bottom: 1rem;
+}
+
+.extra-bottom-margin {
+  margin-bottom: 4rem;
 }
 
 button {
@@ -46,6 +56,10 @@ button:hover {
   transform: translateX(-50%);
 }
 
+.padded {
+  padding: 5%;
+}
+
 .fixed-bottom {
   position: fixed;
   bottom: 2rem;
@@ -63,6 +77,14 @@ button:hover {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+}
+
+.flex-justify-start {
+  justify-content: left;
+}
+
+.flex-align-start {
+  align-items: flex-start;
 }
 
 /* Typography */
@@ -83,6 +105,10 @@ button:hover {
 
 .paragraphs {
   text-align: left;
+}
+
+.right-aligned {
+  text-align: right;
 }
 
 @media(max-width: 768px) {
@@ -114,6 +140,10 @@ button:hover {
 
 /* Utils */
 
+.full-width-self {
+  width: 100%;
+}
+
 .full-width, .full-width * {
   width: 100%;
 }
@@ -130,4 +160,8 @@ button:hover {
   .half-width-md, .half-width-md * {
     width: 50%;
   }
+}
+
+.hidden {
+  display: none;
 }

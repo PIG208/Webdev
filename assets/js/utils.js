@@ -24,10 +24,30 @@ function fadeAltBoxes() {
     handler();
 }
 
-let components = [fadeAltBoxes];
-
-function loadComponents(){
-    components.forEach(item=>item());
+function multiSelect() {
+    let items = document.getElementsByClassName("multi-select");
+    for(let i = 0; i < items.length; i++) {
+        items[i].setAttribute("data-selected", "")
+        let options = items[i].getElementsByTagName("button");
+        for(let n = 0; n < options.length; n++) {
+            options[n].addEventListener("click", (e) => {
+                let value = e.target.getAttribute("data-value");
+                if(!!!value) {
+                    value = e.target.textContent;
+                }
+                items[i].setAttribute("data-selected", value);
+                let selected = items[i].getElementsByClassName("selected");
+                if(selected.length > 0 && !!selected[0]){
+                    selected[0].classList.remove("selected");
+                }
+                e.target.classList.add("selected");
+            });
+        }
+    }
 }
 
-loadComponents();
+let components = [fadeAltBoxes, multiSelect];
+
+export default function loadComponents(){
+    components.forEach(item=>item());
+}

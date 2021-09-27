@@ -3,3 +3,27 @@
 .fade-alt-box > div:nth-child(2) {
     margin-top: -57%;
 }
+
+/* multi-select */
+
+.multi-select > button {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: black;
+    border: black 1px solid;
+    background: rgba(255, 255 , 255, 1);
+    font-size: 0.8rem;
+    transition: all 0.1s;
+}
+
+.multi-select > button:hover {
+    border: grey 1px solid;
+}
+
+.multi-select > button:hover::before {
+    content: "->";
+}
+
+.multi-select > .selected {
+    color: #aaf;
+}
