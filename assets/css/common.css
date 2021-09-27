@@ -14,9 +14,12 @@ header {
 }
 
 main {
-  width: 50vw;
+  width: 70vw;
   min-height: 100vh;
   margin: auto;
+}
+
+.overlap-header {
   margin-top: -3.5rem;
 }
 
@@ -43,6 +46,11 @@ button:hover {
   transform: translateX(-50%);
 }
 
+.fixed-bottom {
+  position: fixed;
+  bottom: 2rem;
+}
+
 /* Typography */
 
 .big-text {
@@ -52,6 +60,12 @@ button:hover {
 .big-text > h1 {
   font-size: 5rem;
   text-align: center;
+}
+
+@media(max-width: 768px) {
+  .big-text > h1{
+    font-size: 3rem;
+  }
 }
 
 /* Multi-page support */
