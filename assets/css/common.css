@@ -51,6 +51,20 @@ button:hover {
   bottom: 2rem;
 }
 
+.horizontal-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+.vertical-flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 /* Typography */
 
 .big-text {
@@ -60,6 +74,15 @@ button:hover {
 .big-text > h1 {
   font-size: 5rem;
   text-align: center;
+}
+
+.paragraphs > p::before {
+  content: "\00B6";
+  font-size: 2em;
+}
+
+.paragraphs {
+  text-align: left;
 }
 
 @media(max-width: 768px) {
@@ -86,5 +109,25 @@ button:hover {
 @media(max-width: 768px){
   main {
     width: 80vw;
+  }
+}
+
+/* Utils */
+
+.full-width, .full-width * {
+  width: 100%;
+}
+
+.half-width, .half-width * {
+  width: 50%;
+}
+
+@media(min-width: 769px){
+  .full-width-md, .full-width-md * {
+    width: 100%;
+  }
+
+  .half-width-md, .half-width-md * {
+    width: 50%;
   }
 }

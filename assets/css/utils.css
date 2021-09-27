@@ -1,0 +1,5 @@
+/* fade-alt-box */
+
+.fade-alt-box > div:nth-child(2) {
+    margin-top: -57%;
+}
