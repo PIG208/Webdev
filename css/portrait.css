@@ -1,0 +1,94 @@
+.top {
+    display: flex;
+}
+
+.top div{
+    margin-right: 5rem;
+}
+
+@media (max-width: 768px) {
+    main {
+        margin-top: 100px;
+    }
+}
+
+/* Position the portrait inside the image */
+
+.image-box {
+    position: relative;
+}
+
+.portrait-box {
+    position: absolute;
+    left: 15%;
+    bottom: 0%;
+}
+
+/* Styling for the portrait */
+
+.eye {
+    width: 10px;
+    height: 15px;
+    text-align: center;
+    background-color: white;
+    margin: 0 15px 0 15px;
+}
+
+.nose {
+    width: 20px;
+    height: 15px;
+    text-align: center;
+    background-color: white;
+    margin: 0 15px 0 15px;
+}
+
+.mouth {
+    width: 30px;
+}
+
+.arm {
+    width: 60px;
+    height: 15px;
+    background-color: rgb(34, 122, 34);
+}
+
+.pbody {
+    height: 150px;
+    width: 60px;
+    text-align: center;
+    color: white;
+    background-color: rgb(37, 169, 37);
+    margin: 10% auto 0 auto;
+}
+
+.leg {
+    height: 100px;
+    width: 10px;
+    background-color: greenyellow;
+    margin: 0 30px;
+    z-index: 10;
+}
+
+.foot {
+    width: 200px;
+    transform: rotate3d(1, 0, 0, 60deg);
+    margin-top: -80px;
+    animation: rotating 1s infinite;
+}
+
+@keyframes rotating {
+    from {
+        transform: rotate3d(1, 0, 1, 0deg);
+    }
+    to {
+        transform: rotate3d(1, 0, 1, 360deg);
+    }
+}
+
+.rotate-left{
+    transform: rotate(25deg);
+}
+
+.rotate-right{
+    transform: rotate(-25deg);
+}
