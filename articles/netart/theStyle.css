@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Geo&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+body {
+  font-family: "Geo", sans-serif;
+  background-image: url("https://d1v7jayx2s9clc.cloudfront.net/user/pages/51.m9ndfukc-0-99/Picture%2011-.png");
+}
+
+h1 {
+  height: 20vh;
+  width: 80vh;
+  background-color: white;
+  font-family: "Press Start 2P", cursive;
+  text-align: center;
+  line-height: 20vh;
+}
+
+main > ul,
+div {
+  min-height: 50vh;
+  width: 100vh;
+  background-color: white;
+  padding: 5%;
+  list-style: none;
+}
+
+li {
+  padding: 5px;
+}
+
+li:before {
+  content: "*";
+}
+
+.title {
+  font-family: "Press Start 2P", cursive;
+  text-align: center;
+  line-height: 10vh;
+}
+
+.title:before {
+  content: none;
+}
+
+#name {
+  font-size: 3vh;
+  line-height: 25vh;
+}
+
+.random {
+  transform: rotate(20deg);
+}
+
+.random2 {
+  transform: rotate(-20deg);
+}
+
+main {
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+#video{
+  /*display: flex;*/
+  justify-content: center;
+  object-fit: contain;
+}
+
+.btn {
+  position: fixed;
+  bottom: 4%;
+  border-radius: 2px;
+  background-color: #ddd;
+}
+
+#next-btn {
+  left: 60%;
+}
+
+#prev-btn {
+  left: 40%;
+}
+
+img {
+  max-height: 100%;
+  max-width: 100%;
+}
+
+#imgcont {
+  display: flex;
+  justify-content: center;
+}
