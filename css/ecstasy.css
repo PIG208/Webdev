@@ -1,0 +1,43 @@
+body {
+    background-color: rgb(255, 186, 243);
+}
+
+main {
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.page {
+    height: unset;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20%;
+    grid-template-rows: 20% 20% 20% 20% 20%;
+}
+
+#container > img {
+    width: 100%;
+}
+
+#space {
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 100%;
+}
+
+.space-box {
+    height: 200px;
+    width: 200px;
+    text-align: center;
+    line-height: 200px;
+    border: 1px solid rgb(51, 51, 51);
+}
+
+#space > div:nth-child(2){
+    margin-left: -50px;
+    margin-top: 50px;
+}
