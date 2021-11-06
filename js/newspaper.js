@@ -1,6 +1,8 @@
 const px = (v) => `${v}px`;
+const containerPadding = "5px";
 
-let dragLock = null;
+let dragLock = undefined;
+let dragOffset = {x: 0, y: 0};
 
 function createElement(className) {
     let element = document.createElement("div");
@@ -12,42 +14,45 @@ function makeDraggable(newspaperElement) {
     const dragBg = "rgba(100, 100, 100, 0.5)";
 
     let dragging = false;
-    let offset = {x: 0, y: 0};
     let element = newspaperElement.el();
     let elementBg = element.style.background;
+    newspaperElement.container.classList.add("draggable");
 
-    element.addEventListener("mousedown", (e) => {
-        offset.x = element.offsetLeft  + Number.parseInt(element.clientWidth) / 2 - e.pageX;
-        offset.y = element.offsetTop + Number.parseInt(element.clientHeight) / 2 - e.pageY;
+    newspaperElement.container.addEventListener("mousedown", (e) => {
+        dragOffset.x = newspaperElement.container.offsetLeft  + Number.parseInt(element.clientWidth) / 2 - e.pageX;
+        dragOffset.y = newspaperElement.container.offsetTop + Number.parseInt(element.clientHeight) / 2 - e.pageY;
         dragging = true;
-        dragLock = element;
+        dragLock = newspaperElement;
 
         element.style.zIndex = 100;
         element.style.background = dragBg;
     });
 
-    element.addEventListener("mouseup", () => {
+    newspaperElement.container.addEventListener("mouseup", () => {
+        if(dragLock === newspaperElement) dragLock = undefined;
         dragging = false;
 
         element.style.zIndex = 0;
         element.style.background = elementBg;
     });
 
-    element.addEventListener("mousemove", (e) => {
+    newspaperElement.container.addEventListener("mousemove", (e) => {
         if(dragging && dragLock !== element) {
             dragging = false;
             element.style.zIndex = 0;
             return;
         }
-
-        if(dragging){
-            newspaperElement.move({
-                x: e.pageX - Number.parseInt(element.clientWidth) / 2 + offset.x,
-                y: e.pageY - Number.parseInt(element.clientHeight) / 2 + offset.y,
-            });
-        }
     });
 }
+
+document.addEventListener("mousemove", (e) => {
+    if(dragLock){
+        dragLock.move({
+            x: e.pageX - Number.parseInt(dragLock.element.clientWidth) / 2 + dragOffset.x,
+            y: e.pageY - Number.parseInt(dragLock.element.clientHeight) / 2 + dragOffset.y,
+        });
+    }
+});
 
 function makeResizable(newspaperElement) {
 
@@ -68,6 +73,7 @@ class NewspaperElement {
     }
 
     move(coord) {
+        console.log(coord);
         if(coord.x !== undefined) this.container.style.left = px(coord.x);
         if(coord.y !== undefined) this.container.style.top = px(coord.y);
         return this;
@@ -75,8 +81,8 @@ class NewspaperElement {
 
     getSize() {
         return {
-            width: Number.parseInt(this.el().style.width),
-            height: Number.parseInt(this.el().style.height),
+            width: Number.parseInt(this.el().style.width) || 0,
+            height: Number.parseInt(this.el().style.height) || 0,
         }
     }
 
@@ -98,14 +104,19 @@ class NewspaperElement {
         return this;
     }
 
+    fitContainer() {
+        this.container.style.width = this.element.style.width;
+        this.container.style.height = this.element.style.height;
+    }
+
     reanchor(anchor) {
         if(anchor.fromRight !== undefined) {
-            this.element.style.left = anchor.fromRight ? "" : 0;
-            this.element.style.right = anchor.fromRight ? 0 : "";
+            this.element.style.left = anchor.fromRight ? "" : containerPadding;
+            this.element.style.right = anchor.fromRight ? containerPadding : "";
         }
         if(anchor.fromBot !== undefined) {
-            this.element.style.top = anchor.fromBot ? "" : 0;
-            this.element.style.bottom = anchor.fromBot ? 0 : "";
+            this.element.style.top = anchor.fromBot ? "" : containerPadding;
+            this.element.style.bottom = anchor.fromBot ? containerPadding : "";
         }
         return this;
     }
@@ -145,7 +156,7 @@ function setupDrawline(btn, isHorizontal) {
         if(enableDrawing && isDrawing) {
             let length = isHorizontal ? e.pageX - origPos.x : (e.pageY - origPos.y);
             line.setSize(isHorizontal ? {width: length} : {height: length});
-            line.el().style.border = `0.5px ${length < cutoff ? "red" : "black"} solid`;
+            line.el().style.border = `0.5px ${Math.abs(length) < cutoff ? "red" : "black"} solid`;
         }
     });
 
@@ -154,6 +165,9 @@ function setupDrawline(btn, isHorizontal) {
             let size = line.getSize();
             if((isHorizontal && size.width < cutoff) || (!isHorizontal && size.height < cutoff)) {
                 line.remove();
+            }
+            else {
+                line.fitContainer();
             }
             isDrawing = false;
         }
@@ -164,11 +178,11 @@ function setup() {
     const container = document.getElementById("container");
 
     bindClick("btn-textbox", () => {
-        container.appendChild(createElement("textbox"));
+        new NewspaperElement("textbox", container).fitContainer();
     });
 
     bindClick("btn-imgbox", () => {
-        container.appendChild(createElement("imgbox"));
+        new NewspaperElement("imgbox", container).fitContainer();
     });
 
     setupDrawline("btn-drawline-vert", false);

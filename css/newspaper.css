@@ -13,8 +13,29 @@
     font-size: 1rem;
 }
 
-.textbox {
+#container {
     position: absolute;
+    display: inline;
+    top: 0;
+    left: 0;
+}
+
+.container {
+    position: absolute;
+    padding: 5px;
+    transform: translate(-2.5px, -2.5px);
+}
+
+.container::before {
+    content: "";
+}
+
+.draggable:hover {
+    border: black 1px solid;
+}
+
+.textbox {
+    position: relative;
     height: 300px;
     width: 300px;
     background-color: white;
@@ -22,15 +43,10 @@
 }
 
 .imgbox {
-    position: absolute;
+    position: relative;
     height: 200px;
     width: 200px;
     background-color: grey;
-}
-
-.container {
-    position: relative;
-    padding: 5px 5px;
 }
 
 .line {
