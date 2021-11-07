@@ -1,5 +1,8 @@
+import {nouns, verbs, adjectives, adverbs, prepositions} from "../js/data.js";
+
 const px = v => `${Number.parseFloat(v)}px`;
 const pn = v => Number.parseFloat(v);
+const cap = s => s[0].toUpperCase() + s.slice(1);
 const containerPadding = "5px";
 
 let dragLock = undefined;
@@ -9,6 +12,18 @@ function createElement(className) {
     let element = document.createElement("div");
     element.classList.add(className);
     return element;
+}
+
+function pickOne(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function optional(cb, prob) {
+    return (prob < Math.random()) ? cb() + " " : "";
+}
+
+function generateSentence() {
+    return cap(`${optional(()=>pickOne(adjectives), 0.5)}${pickOne(nouns)} ${optional(()=>pickOne(adverbs), 0.5)}${pickOne(verbs)} ${optional(()=>pickOne(adjectives), 0.5)}${pickOne(nouns)}. `);
 }
 
 function makeDraggable(newspaperElement) {
@@ -214,6 +229,28 @@ function setup() {
 
     setupDrawline("btn-drawline-vert", false);
     setupDrawline("btn-drawline-hor", true);
+}
+
+function draw() {
+    const duration = 1000;
+    const msInterval = 10;
+
+    let timeElapsed = 0;
+    let textBoxes = document.getElementsByClassName("textbox");
+    let imgBoxes = document.getElementsByClassName("imgbox");
+
+    let interval = setInterval(() => {
+        console.log(textBoxes);
+        try {
+            for(let ele of textBoxes){
+                ele.innerHTML += generateSentence();
+            }
+        }
+        finally {
+            timeElapsed+=msInterval;
+            if(timeElapsed >= duration) clearInterval(interval);
+        }
+    }, msInterval);
 }
 
 setup();
