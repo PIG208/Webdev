@@ -1,4 +1,5 @@
-const px = (v) => `${v}px`;
+const px = v => `${Number.parseFloat(v)}px`;
+const pn = v => Number.parseFloat(v);
 const containerPadding = "5px";
 
 let dragLock = undefined;
@@ -73,16 +74,30 @@ class NewspaperElement {
     }
 
     move(coord) {
-        console.log(coord);
         if(coord.x !== undefined) this.container.style.left = px(coord.x);
         if(coord.y !== undefined) this.container.style.top = px(coord.y);
         return this;
+    }
+
+    relmove(coord) {
+        const {x, y} = this.getPosition();
+        return this.move({
+            x: (coord.x !== undefined) ? px(x  + coord.x) : undefined,
+            y: (coord.y !== undefined) ? px(y  + coord.y) : undefined
+        });
     }
 
     getSize() {
         return {
             width: Number.parseInt(this.el().style.width) || 0,
             height: Number.parseInt(this.el().style.height) || 0,
+        }
+    }
+
+    getPosition() {
+        return {
+            x: pn(this.container.style.left),
+            y: pn(this.container.style.top)
         }
     }
 
@@ -105,11 +120,22 @@ class NewspaperElement {
     }
 
     fitContainer() {
+        let {width, height} = this.getSize();
+        if(this.anchor.fromRight) {
+            this.relmove({x: -width});
+            this.anchor.fromRight = false;
+        };
+        if(this.anchor.fromBot) {
+            this.relmove({y: -height});
+            this.anchor.fromBot = false;
+        };
         this.container.style.width = this.element.style.width;
         this.container.style.height = this.element.style.height;
+        //this.reanchor(this.anchor);
     }
 
     reanchor(anchor) {
+        this.anchor = anchor;
         if(anchor.fromRight !== undefined) {
             this.element.style.left = anchor.fromRight ? "" : containerPadding;
             this.element.style.right = anchor.fromRight ? containerPadding : "";
@@ -147,7 +173,7 @@ function setupDrawline(btn, isHorizontal) {
         if(enableDrawing) {
             isDrawing = true;
             origPos = {x: e.pageX, y: e.pageY};
-            line = new NewspaperElement("line", container);
+            line = new NewspaperElement("line", container, false);
             line.move(origPos);
         }
     });
@@ -168,6 +194,7 @@ function setupDrawline(btn, isHorizontal) {
             }
             else {
                 line.fitContainer();
+                makeDraggable(line);
             }
             isDrawing = false;
         }
