@@ -1,6 +1,7 @@
 import {nouns, verbs, adjectives, adverbs, prepositions} from "../js/data.js";
 
-const px = v => `${Number.parseFloat(v)}px`;
+const gridSize = 10;
+const px = v => `${Number.parseFloat(v) - Number.parseFloat(v) % gridSize}px`;
 const pn = v => Number.parseFloat(v);
 const cap = s => s[0].toUpperCase() + s.slice(1);
 const revCoord = coord => ({x: -coord.x, y: -coord.y});
