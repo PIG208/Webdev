@@ -8,6 +8,19 @@ const containerPadding = "5px";
 let dragLock = undefined;
 let dragOffset = {x: 0, y: 0};
 
+/**
+ * Calculate mouse's relative position to the center of an element
+ * @param mouseEvent The MouseEvent object
+ */
+ function calRelativeCenter(coord, newspaperElement) {
+    const {x, y} = newspaperElement.getOffsetPosition();
+    const {width, height} = newspaperElement.getClientSize();
+    return {
+        x: x + width / 2 - coord.x,
+        y: y + height / 2 - coord.y
+    }
+}
+
 function createElement(className) {
     let element = document.createElement("div");
     element.classList.add(className);
@@ -35,8 +48,7 @@ function makeDraggable(newspaperElement) {
     newspaperElement.container.classList.add("draggable");
 
     newspaperElement.container.addEventListener("mousedown", (e) => {
-        dragOffset.x = newspaperElement.container.offsetLeft  + Number.parseInt(element.clientWidth) / 2 - e.pageX;
-        dragOffset.y = newspaperElement.container.offsetTop + Number.parseInt(element.clientHeight) / 2 - e.pageY;
+        dragOffset = calRelativeCenter({x: e.pageX, y: e.pageY}, newspaperElement);
         dragging = true;
         dragLock = newspaperElement;
 
@@ -63,9 +75,10 @@ function makeDraggable(newspaperElement) {
 
 document.addEventListener("mousemove", (e) => {
     if(dragLock){
+        let {width, height} = dragLock.getClientSize();
         dragLock.move({
-            x: e.pageX - Number.parseInt(dragLock.element.clientWidth) / 2 + dragOffset.x,
-            y: e.pageY - Number.parseInt(dragLock.element.clientHeight) / 2 + dragOffset.y,
+            x: e.pageX - width / 2 + dragOffset.x,
+            y: e.pageY - height / 2 + dragOffset.y,
         });
     }
 });
@@ -109,11 +122,25 @@ class NewspaperElement {
         }
     }
 
+    getClientSize() {
+        return {
+            width: pn(this.el().clientWidth),
+            height: pn(this.el().clientHeight)
+        }
+    }
+
     getPosition() {
         return {
             x: pn(this.container.style.left),
             y: pn(this.container.style.top)
         }
+    }
+
+    getOffsetPosition() {
+        return {
+            x: this.container.offsetLeft,
+            y: this.container.offsetTop
+        };
     }
 
     setSize(size) {
@@ -146,7 +173,9 @@ class NewspaperElement {
         };
         this.container.style.width = this.element.style.width;
         this.container.style.height = this.element.style.height;
-        //this.reanchor(this.anchor);
+        this.reanchor(this.anchor);
+
+        return this;
     }
 
     reanchor(anchor) {
