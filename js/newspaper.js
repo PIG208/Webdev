@@ -6,7 +6,7 @@ const cap = s => s[0].toUpperCase() + s.slice(1);
 const revCoord = coord => ({x: -coord.x, y: -coord.y});
 const containerPadding = "4px";
 
-let dragLock = undefined;
+let dragLock = {element: undefined};
 let dragOffset = {x: 0, y: 0};
 
 /**
@@ -19,9 +19,6 @@ let dragOffset = {x: 0, y: 0};
     return {
         x: coord.x - x - width / 2 ,
         y: coord.y - y - height / 2
-    }
-}
-
     }
 }
 
@@ -44,52 +41,29 @@ function generateSentence() {
 }
 
 function makeDraggable(newspaperElement) {
-    const dragBg = "rgba(100, 100, 100, 0.5)";
-
-    let dragging = false;
-    let element = newspaperElement.el();
-    let elementBg = element.style.background;
     newspaperElement.container.classList.add("draggable");
 
     newspaperElement.container.addEventListener("mousedown", (e) => {
         dragOffset = revCoord(calRelativeCenter({x: e.pageX, y: e.pageY}, newspaperElement));
-        dragging = true;
-        dragLock = newspaperElement;
-
-        element.style.zIndex = 100;
-        element.style.background = dragBg;
-    });
-
-    newspaperElement.container.addEventListener("mouseup", () => {
-        if(dragLock === newspaperElement) dragLock = undefined;
-        dragging = false;
-
-        element.style.zIndex = 0;
-        element.style.background = elementBg;
-    });
-
-    newspaperElement.container.addEventListener("mousemove", (e) => {
-        if(dragging && dragLock !== element) {
-            dragging = false;
-            element.style.zIndex = 0;
-            return;
-        }
+        dragLock.element = newspaperElement;
     });
 }
 
 document.addEventListener("mousemove", (e) => {
-    if(dragLock){
-        let {width, height} = dragLock.getClientSize();
-        dragLock.move({
+    if(dragLock.element){
+        let {width, height} = dragLock.element.getClientSize();
+        dragLock.element.move({
             x: e.pageX - width / 2 + dragOffset.x,
             y: e.pageY - height / 2 + dragOffset.y,
         });
     }
 });
 
-function makeResizable(newspaperElement) {
-
-}
+document.addEventListener("mouseup", (e) => {
+    if(dragLock.element) {
+        dragLock.element = undefined;
+    }
+});
 
 class NewspaperElement {
     constructor(className, parent, drag = true) {

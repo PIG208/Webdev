@@ -31,7 +31,17 @@
 }
 
 .draggable {
+    cursor: grab;
     border: transparent 1px solid;
+}
+
+.draggable:active {
+    cursor: grabbing;
+    z-index: 100;
+}
+
+.draggable:active > div {
+    background-color: rgba(100, 100, 100, 0.5);
 }
 
 .draggable:hover {
