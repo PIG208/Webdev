@@ -5,20 +5,58 @@ const pn = v => Number.parseFloat(v);
 const cap = s => s[0].toUpperCase() + s.slice(1);
 const revCoord = coord => ({x: -coord.x, y: -coord.y});
 const containerPadding = "4px";
+const convertDir = dir => `${dir.y === 0 ? "" : dir.y > 0 ? "s" : "n"}${dir.x === 0 ? "" : dir.x > 0 ? "e" : "w"}`;
 
 let dragLock = {element: undefined};
 let dragOffset = {x: 0, y: 0};
+let resizeLock = {element: undefined, resizeDir: {x: 0, y: 0}};
+
+
+function calRelativeCorner(coord, newspaperElement, corner) {
+    const {x, y} = newspaperElement.getOffsetPosition();
+    const {width, height} = newspaperElement.getClientSize();
+    return {
+        x: coord.x - x + (corner.x - 1) * width / 2 ,
+        y: coord.y - y + (corner.y - 1) * height / 2
+    }
+}
 
 /**
  * Calculate mouse's relative position to the center of an element
  * @param mouseEvent The MouseEvent object
  */
  function calRelativeCenter(coord, newspaperElement) {
-    const {x, y} = newspaperElement.getOffsetPosition();
+    return calRelativeCorner(coord, newspaperElement, {x: 0, y: 0});
+}
+
+/**
+ * Check if a point is within a circle
+ * They should be under the same coordinate system
+ */
+function checkCircle(boundCoord, boundRadius, testPoint) {
+    return Math.abs(boundCoord.x - testPoint.x) < boundRadius && Math.abs(boundCoord.y - testPoint.y) < boundRadius;
+}
+
+/**
+ * Calculate which corner a point is located at
+ */
+function checkAtCorners(testPoint, newspaperElement, horizontal, vertical) {
     const {width, height} = newspaperElement.getClientSize();
+    let relativeCoord = calRelativeCenter(testPoint, newspaperElement);
+
+    for(let i = -1; i <= 1; i++) {
+        for(let j = -1; j <= 1; j++) {
+            let corner = {x:  width * i / 2, y: height * j / 2};
+            // indicate corners by -1 and 1
+            if(checkCircle(corner, (width + height) / 16, relativeCoord)) return {
+                x: horizontal ? i : 0,
+                y: vertical ? j : 0
+            };
+        }
+    }
     return {
-        x: coord.x - x - width / 2 ,
-        y: coord.y - y - height / 2
+        x: 0,
+        y: 0
     }
 }
 
@@ -49,12 +87,47 @@ function makeDraggable(newspaperElement) {
     });
 }
 
+function makeResizable(newspaperElement, horizontal = true, vertical = true) {
+    let element = newspaperElement.el();
+
+    newspaperElement.container.addEventListener("mousemove", (e) => {
+        let corner = checkAtCorners({x: e.pageX, y: e.pageY}, newspaperElement, horizontal, vertical);
+        newspaperElement.container.style.cursor = (corner.x | corner.y !== 0) ? `${convertDir(corner)}-resize` : "";
+    });
+
+    element.addEventListener("mousedown", (e) => {
+        let corner = checkAtCorners({x: e.pageX, y: e.pageY}, newspaperElement, horizontal, vertical);
+        if(corner.x | corner.y) {
+            console.log("trig");
+            // If we are not at the origin
+            resizeLock.element = newspaperElement;
+            resizeLock.resizeDir = corner;
+            newspaperElement.container.style.width = "1px";
+            newspaperElement.container.style.height = "1px";
+        }
+    });
+
+    return newspaperElement;
+}
+
 document.addEventListener("mousemove", (e) => {
-    if(dragLock.element){
+    const coord = {x: e.pageX, y: e.pageY};
+
+    if(resizeLock.element) {
+        let relPos = calRelativeCorner(
+            coord, resizeLock.element, resizeLock.resizeDir
+        );
+        resizeLock.element.setSize({
+            width: resizeLock.resizeDir.x !== 0 ? relPos.x : undefined,
+            height: resizeLock.resizeDir.y !== 0 ? relPos.y : undefined
+        });
+    }
+    // We prioritize resize to drag
+    else if(dragLock.element){
         let {width, height} = dragLock.element.getClientSize();
         dragLock.element.move({
-            x: e.pageX - width / 2 + dragOffset.x,
-            y: e.pageY - height / 2 + dragOffset.y,
+            x: coord.x - width / 2 + dragOffset.x,
+            y: coord.y - height / 2 + dragOffset.y,
         });
     }
 });
@@ -63,7 +136,15 @@ document.addEventListener("mouseup", (e) => {
     if(dragLock.element) {
         dragLock.element = undefined;
     }
+    if(resizeLock.element) {
+        resizeLock.element.fitContainer();
+        resizeLock.element = undefined;
+    }
 });
+
+function makeDeletable(newspaperElement) {
+    
+}
 
 class NewspaperElement {
     constructor(className, parent, drag = true) {
@@ -155,15 +236,15 @@ class NewspaperElement {
     }
 
     reanchor(anchor) {
-        this.anchor = anchor;
-        if(anchor.fromRight !== undefined) {
+        if(anchor.fromRight !== undefined && anchor.fromRight !== this.anchor.fromRight) {
             this.element.style.left = anchor.fromRight ? "" : containerPadding;
             this.element.style.right = anchor.fromRight ? containerPadding : "";
         }
-        if(anchor.fromBot !== undefined) {
+        if(anchor.fromBot !== undefined && anchor.fromBot !== this.anchor.fromBot) {
             this.element.style.top = anchor.fromBot ? "" : containerPadding;
             this.element.style.bottom = anchor.fromBot ? containerPadding : "";
         }
+        this.anchor = anchor;
         return this;
     }
 
@@ -186,7 +267,10 @@ function setupDrawline(btn, isHorizontal) {
 
     bindClick(btn, () => {
         enableDrawing = !enableDrawing;
-        if(!enableDrawing && isDrawing) isDrawing = false;
+        if(!enableDrawing && isDrawing) {
+            isDrawing = false;
+            line && line.remove();
+        }
     });
 
     document.addEventListener("mousedown", (e) => {
@@ -215,6 +299,7 @@ function setupDrawline(btn, isHorizontal) {
             else {
                 line.fitContainer();
                 makeDraggable(line);
+                makeResizable(line, isHorizontal, !isHorizontal);
             }
             isDrawing = false;
         }
@@ -225,11 +310,11 @@ function setup() {
     const container = document.getElementById("container");
 
     bindClick("btn-textbox", () => {
-        new NewspaperElement("textbox", container).fitContainer();
+        makeResizable(new NewspaperElement("textbox", container).fitContainer());
     });
 
     bindClick("btn-imgbox", () => {
-        new NewspaperElement("imgbox", container).fitContainer();
+        makeResizable(new NewspaperElement("imgbox", container).fitContainer());
     });
 
     setupDrawline("btn-drawline-vert", false);
