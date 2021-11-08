@@ -162,18 +162,16 @@ class NewspaperElement {
     }
 
     fitContainer() {
-        let {width, height} = this.getSize();
+        let {width, height} = this.getClientSize();
         if(this.anchor.fromRight) {
             this.relmove({x: -width});
-            this.anchor.fromRight = false;
         };
         if(this.anchor.fromBot) {
             this.relmove({y: -height});
-            this.anchor.fromBot = false;
         };
-        this.container.style.width = this.element.style.width;
-        this.container.style.height = this.element.style.height;
-        this.reanchor(this.anchor);
+        this.container.style.width = px(width);
+        this.container.style.height = px(height);
+        this.reanchor({fromRight: false, fromBot: false});
 
         return this;
     }
@@ -269,7 +267,6 @@ function draw() {
     let imgBoxes = document.getElementsByClassName("imgbox");
 
     let interval = setInterval(() => {
-        console.log(textBoxes);
         try {
             for(let ele of textBoxes){
                 ele.innerHTML += generateSentence();
