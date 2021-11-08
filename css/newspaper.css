@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800&family=Lora&display=swap');
+
 #toolbar {
     position: fixed;
     left: 1rem;
@@ -48,15 +50,27 @@
     border: black 1px solid;
 }
 
+.titlebox {
+    position: absolute;
+    height: 100px;
+    width: 500px;
+    background-color: white;
+    border: 0.1px grey solid;
+    overflow: hidden;
+    user-select: none;
+    font-family: 'Cinzel', serif;
+}
+
 .textbox {
     position: absolute;
     height: 300px;
     width: 300px;
     background-color: white;
-    border: 0.5px black solid;
+    border: 0.1px grey solid;
     overflow-wrap: break-word;
     overflow-y: hidden;
     user-select: none;
+    font-family: 'Lora', serif;
 }
 
 .imgbox {

@@ -174,6 +174,14 @@ class NewspaperElement {
         });
     }
 
+    centralize() {
+        let {width, height} = this.getClientSize();
+        return this.move({
+            x: (document.body.clientWidth - width) / 2,
+            y: (document.body.clientHeight - height) / 2
+        });
+    }
+
     getSize() {
         return {
             width: Number.parseInt(this.el().style.width) || 0,
@@ -301,6 +309,7 @@ function setupDrawline(btn, isHorizontal) {
                 makeDraggable(line);
                 makeResizable(line, isHorizontal, !isHorizontal);
             }
+            enableDrawing = false;
             isDrawing = false;
         }
     });
@@ -309,16 +318,22 @@ function setupDrawline(btn, isHorizontal) {
 function setup() {
     const container = document.getElementById("container");
 
+    bindClick("btn-titlebox", () => {
+        makeResizable(new NewspaperElement("titlebox", container).fitContainer()).centralize();
+    });
+
     bindClick("btn-textbox", () => {
-        makeResizable(new NewspaperElement("textbox", container).fitContainer());
+        makeResizable(new NewspaperElement("textbox", container).fitContainer()).centralize();
     });
 
     bindClick("btn-imgbox", () => {
-        makeResizable(new NewspaperElement("imgbox", container).fitContainer());
+        makeResizable(new NewspaperElement("imgbox", container).fitContainer()).centralize();
     });
 
     setupDrawline("btn-drawline-vert", false);
     setupDrawline("btn-drawline-hor", true);
+
+    bindClick("btn-draw", draw);
 }
 
 function draw() {
@@ -326,8 +341,23 @@ function draw() {
     const msInterval = 10;
 
     let timeElapsed = 0;
+
+    let titleBoxes = document.getElementsByClassName("titlebox");
     let textBoxes = document.getElementsByClassName("textbox");
     let imgBoxes = document.getElementsByClassName("imgbox");
+
+    for(let ele of titleBoxes){
+        ele.innerHTML = "";
+        ele.style.border = "none";
+        let h1 = document.createElement("h1");
+        h1.innerText = generateSentence();
+        ele.appendChild(h1);
+    }
+
+    for(let ele of textBoxes){
+        ele.innerHTML = "";
+        ele.style.border = "none";
+    }
 
     let interval = setInterval(() => {
         try {
