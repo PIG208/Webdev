@@ -3,7 +3,7 @@ import {nouns, verbs, adjectives, adverbs, prepositions} from "../js/data.js";
 const px = v => `${Number.parseFloat(v)}px`;
 const pn = v => Number.parseFloat(v);
 const cap = s => s[0].toUpperCase() + s.slice(1);
-const containerPadding = "5px";
+const revCoord = coord => ({x: -coord.x, y: -coord.y});
 
 let dragLock = undefined;
 let dragOffset = {x: 0, y: 0};
@@ -16,8 +16,11 @@ let dragOffset = {x: 0, y: 0};
     const {x, y} = newspaperElement.getOffsetPosition();
     const {width, height} = newspaperElement.getClientSize();
     return {
-        x: x + width / 2 - coord.x,
-        y: y + height / 2 - coord.y
+        x: coord.x - x - width / 2 ,
+        y: coord.y - y - height / 2
+    }
+}
+
     }
 }
 
@@ -48,7 +51,7 @@ function makeDraggable(newspaperElement) {
     newspaperElement.container.classList.add("draggable");
 
     newspaperElement.container.addEventListener("mousedown", (e) => {
-        dragOffset = calRelativeCenter({x: e.pageX, y: e.pageY}, newspaperElement);
+        dragOffset = revCoord(calRelativeCenter({x: e.pageX, y: e.pageY}, newspaperElement));
         dragging = true;
         dragLock = newspaperElement;
 
