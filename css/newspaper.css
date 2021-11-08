@@ -30,22 +30,27 @@
     content: "";
 }
 
+.draggable {
+    border: transparent 1px solid;
+}
+
 .draggable:hover {
     border: black 1px solid;
 }
 
 .textbox {
-    position: relative;
+    position: absolute;
     height: 300px;
     width: 300px;
     background-color: white;
     border: 0.5px black solid;
     overflow-wrap: break-word;
     overflow-y: hidden;
+    user-select: none;
 }
 
 .imgbox {
-    position: relative;
+    position: absolute;
     height: 200px;
     width: 200px;
     background-color: grey;

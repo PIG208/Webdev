@@ -4,6 +4,7 @@ const px = v => `${Number.parseFloat(v)}px`;
 const pn = v => Number.parseFloat(v);
 const cap = s => s[0].toUpperCase() + s.slice(1);
 const revCoord = coord => ({x: -coord.x, y: -coord.y});
+const containerPadding = "4px";
 
 let dragLock = undefined;
 let dragOffset = {x: 0, y: 0};
