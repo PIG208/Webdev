@@ -89,17 +89,14 @@ function makeDraggable(newspaperElement) {
 }
 
 function makeResizable(newspaperElement, horizontal = true, vertical = true) {
-    let element = newspaperElement.el();
-
     newspaperElement.container.addEventListener("mousemove", (e) => {
         let corner = checkAtCorners({x: e.pageX, y: e.pageY}, newspaperElement, horizontal, vertical);
         newspaperElement.container.style.cursor = (corner.x | corner.y !== 0) ? `${convertDir(corner)}-resize` : "";
     });
 
-    element.addEventListener("mousedown", (e) => {
+    newspaperElement.container.addEventListener("mousedown", (e) => {
         let corner = checkAtCorners({x: e.pageX, y: e.pageY}, newspaperElement, horizontal, vertical);
         if(corner.x | corner.y) {
-            console.log("trig");
             // If we are not at the origin
             resizeLock.element = newspaperElement;
             resizeLock.resizeDir = corner;
