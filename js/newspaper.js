@@ -6,6 +6,7 @@ const pn = v => Number.parseFloat(v);
 const cap = s => s[0].toUpperCase() + s.slice(1);
 const revCoord = coord => ({x: -coord.x, y: -coord.y});
 const absCoord = coord => ({x: Math.abs(coord.x), y: Math.abs(coord.y)});
+const coordBothLarger = (coordA, coordB) => coordA.x > coordB.x && coordA.y > coordB.y;
 const containerPadding = "4px";
 const convertDir = dir => `${dir.y === 0 ? "" : dir.y > 0 ? "s" : "n"}${dir.x === 0 ? "" : dir.x > 0 ? "e" : "w"}`;
 
@@ -32,11 +33,21 @@ function calRelativeCorner(coord, newspaperElement, corner) {
 }
 
 /**
- * Check if a point is within a circle
+ * Check the relative position of a point
  * They should be under the same coordinate system
+ * ==  ==================  ==
+ * | (-1, -1)               | (1, -1)
+ * 
+ * |                        |
+ * |                        |
+ * | (-1,  0)   (0,  0)     | (1,  0)
+ * |                        |
+ * 
+ * | (-1,  1)               | (1,  1)
+ * ==  ==================  == 
  */
-function checkCircle(boundCoord, boundRadius, testPoint) {
-    return Math.abs(boundCoord.x - testPoint.x) < boundRadius && Math.abs(boundCoord.y - testPoint.y) < boundRadius;
+function checkRect(checkPoint, rect) {
+    return coordBothLarger(rect.rightBot, checkPoint) && coordBothLarger(checkPoint, rect.leftTop);
 }
 
 /**
@@ -44,16 +55,23 @@ function checkCircle(boundCoord, boundRadius, testPoint) {
  */
 function checkAtCorners(testPoint, newspaperElement, horizontal, vertical) {
     const {width, height} = newspaperElement.getClientSize();
-    let relativeCoord = calRelativeCenter(testPoint, newspaperElement);
+    const [cornerWidth, cornerHeight] = [width / 16, height / 16];
+    const criticalX = [-(width / 2) - cornerWidth, -(width / 2) + cornerWidth, width / 2 - cornerWidth, width / 2 + cornerWidth];
 
-    for(let i = -1; i <= 1; i++) {
-        for(let j = -1; j <= 1; j++) {
-            let corner = {x:  width * i / 2, y: height * j / 2};
+    const criticalY = [-(height / 2) - cornerHeight, -(height / 2) + cornerHeight, height / 2 - cornerHeight, height / 2 + cornerHeight];
+
+    let relativeCoord = calRelativeCenter(testPoint, newspaperElement);
+    
+
+    for(let i = 0; i <= 2; i++) {
+        for(let j = 0; j <= 2; j++) {
+            if(i==1 && j==1) continue;
             // indicate corners by -1 and 1
-            if(checkCircle(corner, (width + height) / 16, relativeCoord)) return {
-                x: horizontal ? i : 0,
-                y: vertical ? j : 0
-            };
+            if(checkRect(relativeCoord,{leftTop: {x: criticalX[i], y: criticalY[j]},rightBot: {x: criticalX[i + 1], y: criticalY[j + 1]}}))
+                return {
+                    x: horizontal ? i - 1 : 0,
+                    y: vertical ? j - 1 : 0
+                };
         }
     }
     return {
