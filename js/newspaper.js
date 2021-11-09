@@ -5,6 +5,7 @@ const px = v => `${Number.parseFloat(v) - Number.parseFloat(v) % gridSize}px`;
 const pn = v => Number.parseFloat(v);
 const cap = s => s[0].toUpperCase() + s.slice(1);
 const revCoord = coord => ({x: -coord.x, y: -coord.y});
+const absCoord = coord => ({x: Math.abs(coord.x), y: Math.abs(coord.y)});
 const containerPadding = "4px";
 const convertDir = dir => `${dir.y === 0 ? "" : dir.y > 0 ? "s" : "n"}${dir.x === 0 ? "" : dir.x > 0 ? "e" : "w"}`;
 
@@ -88,6 +89,16 @@ function makeDraggable(newspaperElement) {
     });
 }
 
+function handleResize(coord) {
+    let relPos = calRelativeCorner(
+        coord, resizeLock.element, resizeLock.resizeDir
+    );
+    resizeLock.element.setSize({
+        width: resizeLock.resizeDir.x !== 0 ? relPos.x : undefined,
+        height: resizeLock.resizeDir.y !== 0 ? relPos.y : undefined
+    });
+}
+
 function makeResizable(newspaperElement, horizontal = true, vertical = true) {
     newspaperElement.container.addEventListener("mousemove", (e) => {
         let corner = checkAtCorners({x: e.pageX, y: e.pageY}, newspaperElement, horizontal, vertical);
@@ -95,11 +106,17 @@ function makeResizable(newspaperElement, horizontal = true, vertical = true) {
     });
 
     newspaperElement.container.addEventListener("mousedown", (e) => {
+        const size = newspaperElement.getClientSize();
         let corner = checkAtCorners({x: e.pageX, y: e.pageY}, newspaperElement, horizontal, vertical);
         if(corner.x | corner.y) {
             // If we are not at the origin
             resizeLock.element = newspaperElement;
-            resizeLock.resizeDir = corner;
+            resizeLock.element.relmove({
+                x: (corner.x < 0) ? size.width : undefined,
+                y: (corner.y < 0) ? size.height : undefined
+            });
+            resizeLock.resizeDir = absCoord(corner);
+            handleResize({x: e.pageX, y: e.pageY});
             newspaperElement.container.style.width = "1px";
             newspaperElement.container.style.height = "1px";
         }
@@ -112,13 +129,7 @@ document.addEventListener("mousemove", (e) => {
     const coord = {x: e.pageX, y: e.pageY};
 
     if(resizeLock.element) {
-        let relPos = calRelativeCorner(
-            coord, resizeLock.element, resizeLock.resizeDir
-        );
-        resizeLock.element.setSize({
-            width: resizeLock.resizeDir.x !== 0 ? relPos.x : undefined,
-            height: resizeLock.resizeDir.y !== 0 ? relPos.y : undefined
-        });
+        handleResize(coord);
     }
     // We prioritize resize to drag
     else if(dragLock.element){
@@ -250,7 +261,8 @@ class NewspaperElement {
             this.element.style.top = anchor.fromBot ? "" : containerPadding;
             this.element.style.bottom = anchor.fromBot ? containerPadding : "";
         }
-        this.anchor = anchor;
+        if(anchor.fromBot !== undefined) this.anchor.fromBot = anchor.fromBot;
+        if(anchor.fromRight !== undefined) this.anchor.fromRight = anchor.fromRight;
         return this;
     }
 
