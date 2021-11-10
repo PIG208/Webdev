@@ -420,16 +420,16 @@ function setupDrawline(btn, isHorizontal) {
     }
   });
 
-  document.addEventListener("mousedown", (e) => {
+  function handleStartDrawing(e) {
     if (enableDrawing) {
       isDrawing = true;
       origPos = { x: e.clientX + mainContainer.scrollLeft, y: e.clientY + mainContainer.scrollTop };
       line = new NewspaperElement("line", container, false);
       line.move(origPos);
     }
-  });
+  }
 
-  document.addEventListener("mousemove", (e) => {
+  function handleMoveDrawing(e) {
     if (enableDrawing && isDrawing) {
       let length = isHorizontal ? e.clientX + mainContainer.scrollLeft - origPos.x : e.clientY + mainContainer.scrollTop - origPos.y;
       line.setSize(isHorizontal ? { width: length } : { height: length });
@@ -437,9 +437,9 @@ function setupDrawline(btn, isHorizontal) {
         Math.abs(length) < cutoff ? "red" : "black"
       } solid`;
     }
-  });
+  }
 
-  document.addEventListener("mouseup", (e) => {
+  function handleStopDrawing(e) {
     if (enableDrawing && isDrawing) {
       let size = line.getSize();
       if (
@@ -455,7 +455,16 @@ function setupDrawline(btn, isHorizontal) {
       enableDrawing = false;
       isDrawing = false;
     }
-  });
+  }
+
+  document.addEventListener("mousedown", handleStartDrawing);
+  document.addEventListener("touchstart", handleStartDrawing);
+
+  document.addEventListener("mousemove", handleMoveDrawing);
+  document.addEventListener("touchmove", handleMoveDrawing);
+
+  document.addEventListener("mouseup", handleStopDrawing);
+  document.addEventListener("touchend", handleStopDrawing);
 }
 
 function setup() {
