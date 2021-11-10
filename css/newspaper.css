@@ -5,6 +5,35 @@
     --stripe-color-sec: #5d5d5d;
 }
 
+body {
+    font-family: 'Lora', serif;
+}
+
+button {
+    font-family: 'Lora', serif;
+    border: none;
+    font-size: 1rem;
+    border: 2px dotted transparent;
+    transition: font-size 0.1s, border 0.1s;
+    user-select: none;
+}
+
+button:hover {
+    border: 2px dotted grey;
+    font-size: 1.1rem;
+}
+
+.disable {
+    cursor: unset !important;
+    color: grey !important;
+    border: 2px dotted grey !important;
+    font-size: 1rem !important;
+}
+
+h1 {
+    font-family: 'Cinzel', serif;
+}
+
 #toolbar {
     position: fixed;
     left: 1rem;
@@ -15,19 +44,8 @@
     justify-content: space-evenly;
     align-items: left;
     flex-direction: column;
-}
-
-#toolbar > button {
-    font-family: "Lora", serif;
-    border: none;
-    font-size: 1rem;
-    border: 2px dotted transparent;
-    transition: font-size 0.1s, border 0.1s;
-}
-
-#toolbar > button:hover {
-    border: 2px dotted grey;
-    font-size: 1.1rem;
+    opacity: 1;
+    transition: opacity 1s;
 }
 
 #container {
@@ -54,6 +72,14 @@
     font-family: 'Lora', serif;
     text-align: center;
     transition: font-size 0.2s, background-color 0.3s, border 0.3s, color 0.1s;
+}
+
+#btn-back {
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    color: black;
 }
 
 .deletion-inactive {
@@ -132,6 +158,7 @@
     position: absolute;
     padding: 5px;
     transform: translate(-2.5px, -2.5px);
+    user-select: none;
 }
 
 .container::before {
@@ -163,8 +190,6 @@
     background-color: transparent;
     border: 0.1px grey solid;
     overflow: hidden;
-    user-select: none;
-    font-family: 'Cinzel', serif;
 }
 
 .titlebox > h1 {
@@ -179,8 +204,6 @@
     border: 0.1px grey solid;
     overflow-wrap: break-word;
     overflow-y: hidden;
-    user-select: none;
-    font-family: 'Lora', serif;
 }
 
 .imgbox {
@@ -194,6 +217,10 @@
         #00000075 10px,
         #00000075 20px
     );
+}
+
+.transparent {
+    opacity: 0 !important;
 }
 
 @media(max-width: 768px) {

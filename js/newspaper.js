@@ -20,6 +20,11 @@ let isDrawing = false;
 let dragLock = { element: undefined, canDelete: false };
 let dragOffset = { x: 0, y: 0 };
 let resizeLock = { element: undefined, resizeDir: { x: 0, y: 0 } };
+let elements = [];
+
+function canDone() {
+  return elements.length > 0 && elements.find(ele => !ele.generated) === undefined;
+}
 
 function calRelativeCorner(coord, newspaperElement, corner) {
   const { x, y } = newspaperElement.getOffsetPosition();
@@ -242,8 +247,11 @@ class NewspaperElement {
     this.element = createElement(className);
     this.container = createElement("container");
     this.container.appendChild(this.element);
+    this.generated = false;
     parent.appendChild(this.container);
     drag && makeDraggable(this);
+    elements.push(this);
+    document.getElementById("btn-done").classList.add("disable");
   }
 
   el() {
@@ -354,8 +362,18 @@ class NewspaperElement {
     return this;
   }
 
+  clean() {
+    this.container.classList.remove("draggable");
+    this.container.style.removeProperty("cursor");
+    let freshNode = this.container.cloneNode(true);
+    this.container.parentNode.replaceChild(freshNode, this.container);
+    this.container = freshNode;
+  }
+
   remove() {
     this.container.remove();
+    elements.splice(elements.indexOf(this), 1);
+    if(canDone()) document.getElementById("btn-done").classList.remove("disable");
   }
 }
 
@@ -418,6 +436,8 @@ function setupDrawline(btn, isHorizontal) {
 
 function setup() {
   const container = document.getElementById("container");
+  document.getElementById("btn-done").classList.add("disable");
+  document.getElementById("btn-back").style.display = "none";
 
   bindClick("btn-titlebox", () => {
     makeResizable(
@@ -441,6 +461,19 @@ function setup() {
   setupDrawline("btn-drawline-hor", true);
 
   bindClick("btn-draw", draw);
+
+  bindClick("btn-done", () => {
+    if(!canDone()) return;
+    document.getElementById("toolbar").classList.add("transparent");
+    elements.forEach(element => {
+      element.clean();
+    });
+    document.getElementById("btn-back").style.display = "";
+  });
+
+  bindClick("btn-back", () => {
+    document.location = "newspaper-intro.html";
+  });
 }
 
 function draw() {
@@ -476,6 +509,11 @@ function draw() {
       if (timeElapsed >= duration) clearInterval(interval);
     }
   }, msInterval);
+
+  for(let ele of elements) {
+    ele.generated = true;
+  }
+  if(canDone()) document.getElementById("btn-done").classList.remove("disable");
 }
 
 setup();
