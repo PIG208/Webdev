@@ -9,7 +9,8 @@
     position: fixed;
     left: 1rem;
     top: 5%;
-    min-height: 100vh;
+    width: 150px;
+    height: 100vh;
     display: flex;
     justify-content: space-evenly;
     align-items: left;
@@ -17,7 +18,16 @@
 }
 
 #toolbar > button {
+    font-family: "Lora", serif;
+    border: none;
     font-size: 1rem;
+    border: 2px dotted transparent;
+    transition: font-size 0.1s, border 0.1s;
+}
+
+#toolbar > button:hover {
+    border: 2px dotted grey;
+    font-size: 1.1rem;
 }
 
 #container {
@@ -27,7 +37,7 @@
     left: 0;
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    overflow: scroll;
 }
 
 #deletion {
@@ -148,20 +158,24 @@
 
 .titlebox {
     position: absolute;
-    height: 100px;
-    width: 500px;
-    background-color: white;
+    height: 50px;
+    width: 600px;
+    background-color: transparent;
     border: 0.1px grey solid;
     overflow: hidden;
     user-select: none;
     font-family: 'Cinzel', serif;
 }
 
+.titlebox > h1 {
+    margin: 0;
+}
+
 .textbox {
     position: absolute;
     height: 300px;
     width: 300px;
-    background-color: white;
+    background-color: transparent;
     border: 0.1px grey solid;
     overflow-wrap: break-word;
     overflow-y: hidden;
@@ -173,7 +187,23 @@
     position: absolute;
     height: 200px;
     width: 200px;
-    background-color: grey;
+    background: repeating-linear-gradient(
+        45deg,
+        white,
+        white 10px,
+        #00000075 10px,
+        #00000075 20px
+    );
+}
+
+@media(max-width: 768px) {
+    .titlebox {
+        width: 300px;
+    }
+    .textbox {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 .line {
