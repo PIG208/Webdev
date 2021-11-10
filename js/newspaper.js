@@ -15,6 +15,7 @@ const convertDir = (dir) =>
     dir.x === 0 ? "" : dir.x > 0 ? "e" : "w"
   }`;
 const deletionZone = document.getElementById("deletion");
+const mainContainer = document.getElementById("container");
 
 let isDrawing = false;
 let dragLock = { element: undefined, canDelete: false };
@@ -140,7 +141,7 @@ function makeDraggable(newspaperElement) {
     if(isDrawing) return;
     deletionZone.classList = ["deletion-active"];
     dragOffset = revCoord(
-      calRelativeCenter({ x: e.pageX, y: e.pageY }, newspaperElement)
+      calRelativeCenter({ x: e.clientX, y: e.clientY }, newspaperElement)
     );
     dragLock.element = newspaperElement;
   });
@@ -161,7 +162,7 @@ function handleResize(coord) {
 function makeResizable(newspaperElement, horizontal = true, vertical = true) {
   newspaperElement.container.addEventListener("mousemove", (e) => {
     let corner = checkAtCorners(
-      { x: e.pageX, y: e.pageY },
+      { x: e.clientX + mainContainer.scrollLeft, y: e.clientY + mainContainer.scrollTop },
       newspaperElement,
       horizontal,
       vertical
@@ -174,7 +175,7 @@ function makeResizable(newspaperElement, horizontal = true, vertical = true) {
     if(isDrawing) return;
     const size = newspaperElement.getClientSize();
     let corner = checkAtCorners(
-      { x: e.pageX, y: e.pageY },
+      { x: e.clientX + mainContainer.scrollLeft, y: e.clientY + mainContainer.scrollTop },
       newspaperElement,
       horizontal,
       vertical
@@ -187,7 +188,7 @@ function makeResizable(newspaperElement, horizontal = true, vertical = true) {
         y: corner.y < 0 ? size.height : undefined,
       });
       resizeLock.resizeDir = absCoord(corner);
-      handleResize({ x: e.pageX, y: e.pageY });
+      handleResize({ x: e.clientX + mainContainer.scrollLeft, y: e.clientY + mainContainer.scrollTop });
       newspaperElement.container.style.width = "1px";
       newspaperElement.container.style.height = "1px";
     }
@@ -201,7 +202,7 @@ document.addEventListener("mousemove", (e) => {
   const coord = { x: e.pageX, y: e.pageY };
 
   if (resizeLock.element) {
-    handleResize(coord);
+    handleResize({x: coord.x + mainContainer.scrollLeft, y: coord.y + mainContainer.scrollTop});
   }
   // We prioritize resize to drag
   else if (dragLock.element) {
@@ -399,7 +400,7 @@ function setupDrawline(btn, isHorizontal) {
   document.addEventListener("mousedown", (e) => {
     if (enableDrawing) {
       isDrawing = true;
-      origPos = { x: e.pageX, y: e.pageY };
+      origPos = { x: e.clientX + mainContainer.scrollLeft, y: e.clientY + mainContainer.scrollTop };
       line = new NewspaperElement("line", container, false);
       line.move(origPos);
     }
@@ -407,7 +408,7 @@ function setupDrawline(btn, isHorizontal) {
 
   document.addEventListener("mousemove", (e) => {
     if (enableDrawing && isDrawing) {
-      let length = isHorizontal ? e.pageX - origPos.x : e.pageY - origPos.y;
+      let length = isHorizontal ? e.clientX + mainContainer.scrollLeft - origPos.x : e.clientY + mainContainer.scrollTop - origPos.y;
       line.setSize(isHorizontal ? { width: length } : { height: length });
       line.el().style.border = `0.5px ${
         Math.abs(length) < cutoff ? "red" : "black"
