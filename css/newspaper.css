@@ -48,6 +48,15 @@ h1 {
     transition: opacity 1s;
 }
 
+@media (max-width: 768px) {
+    #toolbar {
+        width: 70px;
+    }
+    #toolbar > button {
+        padding: 0;
+    }
+}
+
 #container {
     position: absolute;
     display: inline;
