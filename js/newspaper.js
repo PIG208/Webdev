@@ -14,8 +14,10 @@ const convertDir = (dir) =>
   `${dir.y === 0 ? "" : dir.y > 0 ? "s" : "n"}${
     dir.x === 0 ? "" : dir.x > 0 ? "e" : "w"
   }`;
+const deletionZone = document.getElementById("deletion");
 
-let dragLock = { element: undefined };
+let isDrawing = false;
+let dragLock = { element: undefined, canDelete: false };
 let dragOffset = { x: 0, y: 0 };
 let resizeLock = { element: undefined, resizeDir: { x: 0, y: 0 } };
 
@@ -62,7 +64,7 @@ function checkRect(checkPoint, rect) {
  */
 function checkAtCorners(testPoint, newspaperElement, horizontal, vertical) {
   const { width, height } = newspaperElement.getClientSize();
-  const [cornerWidth, cornerHeight] = [width / 16, height / 16];
+  const [cornerWidth, cornerHeight] = [Math.max(width / 16, 5), Math.max(height / 16, 5)];
   const criticalX = [
     -(width / 2) - cornerWidth,
     -(width / 2) + cornerWidth,
@@ -130,6 +132,8 @@ function makeDraggable(newspaperElement) {
   newspaperElement.container.classList.add("draggable");
 
   newspaperElement.container.addEventListener("mousedown", (e) => {
+    if(isDrawing) return;
+    deletionZone.classList = ["deletion-active"];
     dragOffset = revCoord(
       calRelativeCenter({ x: e.pageX, y: e.pageY }, newspaperElement)
     );
@@ -162,6 +166,7 @@ function makeResizable(newspaperElement, horizontal = true, vertical = true) {
   });
 
   newspaperElement.container.addEventListener("mousedown", (e) => {
+    if(isDrawing) return;
     const size = newspaperElement.getClientSize();
     let corner = checkAtCorners(
       { x: e.pageX, y: e.pageY },
@@ -187,6 +192,7 @@ function makeResizable(newspaperElement, horizontal = true, vertical = true) {
 }
 
 document.addEventListener("mousemove", (e) => {
+  if(isDrawing) return;
   const coord = { x: e.pageX, y: e.pageY };
 
   if (resizeLock.element) {
@@ -199,12 +205,28 @@ document.addEventListener("mousemove", (e) => {
       x: coord.x - width / 2 + dragOffset.x,
       y: coord.y - height / 2 + dragOffset.y,
     });
+    // Check if we can delete it
+    dragLock.canDelete = checkRect(coord, {
+      leftTop: {x: deletionZone.offsetLeft, y: deletionZone.offsetTop},
+      rightBot: {x: deletionZone.offsetLeft + deletionZone.offsetWidth, y: deletionZone.offsetTop + deletionZone.offsetHeight}
+    });
+    if(dragLock.canDelete) {
+      deletionZone.classList.add("deletion-hover");
+    }
+    else {
+      deletionZone.classList.remove("deletion-hover");
+    }
   }
 });
 
 document.addEventListener("mouseup", (e) => {
   if (dragLock.element) {
+    deletionZone.classList = ["deletion-inactive"];
+    if(dragLock.canDelete) {
+      dragLock.element.remove();
+    }
     dragLock.element = undefined;
+    dragLock.canDelete = false;
   }
   if (resizeLock.element) {
     resizeLock.element.fitContainer();
@@ -346,7 +368,6 @@ function setupDrawline(btn, isHorizontal) {
   const cutoff = 20;
 
   let origPos, line;
-  let isDrawing = false;
   let enableDrawing = false;
 
   bindClick(btn, () => {

@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800&family=Lora&display=swap');
 
+:root {
+    --stripe-color: #bababa;
+    --stripe-color-sec: #5d5d5d;
+}
+
 #toolbar {
     position: fixed;
     left: 1rem;
@@ -20,6 +25,97 @@
     display: inline;
     top: 0;
     left: 0;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+#deletion {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    z-index: -10;
+
+    margin: 0.5rem;
+    width: 200px;
+    height: 200px;
+    line-height: 200px;
+
+    font-family: 'Lora', serif;
+    text-align: center;
+    transition: font-size 0.2s, background-color 0.3s, border 0.3s, color 0.1s;
+}
+
+.deletion-inactive {
+    color: transparent;
+    border: 1px transparent dashed;
+}
+
+.deletion-active {
+    display: block;
+    color: black;
+    border: 1px grey dashed;
+}
+
+.deletion-hover {
+    color: white;
+    font-size: 2.5rem;
+    background-color: var(--stripe-color);
+    animation: stripes 0.3s infinite;
+}
+
+@media(max-width: 768px) {
+    #deletion {
+        height: 100px;
+        line-height: 100px;
+    }
+}
+
+/**
+* Code for the stripes found in https://css-tricks.com/stripes-css/.
+* Animated by myself.
+*/
+@keyframes stripes {
+    0% {
+        background: repeating-linear-gradient(
+            45deg,
+            var(--stripe-color-sec),
+            var(--stripe-color-sec) 10px,
+            var(--stripe-color) 10px,
+            var(--stripe-color) 20px
+        );
+    }
+    33% {
+        background: repeating-linear-gradient(
+            45deg,
+            var(--stripe-color),
+            var(--stripe-color) 5px,
+            var(--stripe-color-sec) 5px,
+            var(--stripe-color-sec) 15px,
+            var(--stripe-color) 15px,
+            var(--stripe-color) 20px
+        );
+    }
+    66.7% {
+        background: repeating-linear-gradient(
+            45deg,
+            var(--stripe-color),
+            var(--stripe-color) 10px,
+            var(--stripe-color-sec) 10px,
+            var(--stripe-color-sec) 20px
+        );
+    }
+    100% {
+        background: repeating-linear-gradient(
+            45deg,
+            var(--stripe-color-sec),
+            var(--stripe-color-sec) 5px,
+            var(--stripe-color) 5px,
+            var(--stripe-color) 15px,
+            var(--stripe-color-sec) 15px,
+            var(--stripe-color-sec) 20px
+        );
+    }
 }
 
 .container {
