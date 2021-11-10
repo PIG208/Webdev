@@ -3,3 +3,16 @@ export const verbs = ["stamp", "bomb", "meddle", "remain", "observe", "cross", "
 export const adjectives = ["detailed", "grandiose", "angry", "tricky", "alert", "known", "wealthy", "phobic", "exotic", "laughable", "heavenly", "helpful", "rough", "vulgar", "icky", "aback", "meaty", "nimble", "befitting", "observant", "testy", "helpless", "five", "splendid", "verdant", "dispensable", "jumpy", "little", "jazzy", "exultant", "feeble", "early", "pumped", "thoughtful", "bloody", "hurried", "exuberant", "fast", "gratis", "gleaming", "icy", "vagabond", "absorbing", "yellow", "calm", "tacky", "dashing", "humdrum", "misty", "worried", "fanatical", "judicious", "substantial", "crowded", "distinct", "square", "standing", "rapid", "selfish", "well-to-do", "dependent", "roasted", "real", "honorable", "encouraging", "unwritten", "light", "rotten", "materialistic", "acrid", "satisfying", "funny", "overwrought", "cut", "elfin", "squealing", "rainy", "hilarious", "short", "thin", "ultra", "juicy", "ritzy", "flagrant", "quack", "holistic", "receptive", "abortive", "momentous", "teeny-tiny", "smart", "spicy", "deeply", "solid", "wanting", "rural", "jittery", "temporary", "nostalgic", "joyous"];
 export const adverbs = ["thoroughly", "seemingly", "personally", "sleepily", "truthfully", "shrilly", "deftly", "dramatically", "meaningfully", "crazily", "recently", "greedily", "ultimately", "almost", "fully", "zealously", "safely", "wrongly", "frenetically", "highly", "commonly", "widely", "steadily", "delightfully", "warmly", "exactly", "hardly", "brightly", "shakily", "coolly", "judgementally", "vastly", "coaxingly", "jovially", "hastily", "knowingly", "swiftly", "reluctantly", "sadly", "urgently", "sweetly", "definitely", "then", "naturally", "awkwardly", "restfully", "mockingly", "quarrelsomely", "altogether", "specifically", "honestly", "nearly", "suddenly", "always", "selfishly", "fast", "repeatedly", "poorly", "deceivingly", "victoriously", "kindly", "officially", "bitterly", "curiously", "unabashedly", "sharply", "freely", "kindheartedly", "afterwards", "longingly", "oddly", "mortally", "directly", "patiently", "correctly", "therefore", "really", "greatly", "occasionally", "stealthily", "separately", "wildly", "foolishly", "together", "gently", "annually", "painfully", "scarcely", "triumphantly", "unimpressively", "wearily", "jubilantly", "yieldingly", "effectively", "tremendously", "lightly", "cautiously", "constantly", "healthily", "currently"];
 export const prepositions = ["besides", "towards", "via", "unlike", "versus", "between", "at", "by", "on", "upon", "toward", "opposite"];
+
+export const imagePathPrefix = "../assets/imgs/newspaper/";
+// width / height
+export const ratioToImages = {
+    0.6: ["060n01.jpg", "060n02.jpg"],
+    0.75: ["075n01.jpg", "075n02.jpg", "075n03.jpg", "075n04.jpg"],
+    1: ["100n01.jpg", "100n02.jpg", "100n03.jpg", "100n04.jpeg"],
+    1.33: ["133n01.jpg", "133n02.jpg", "133n03.jpg", "133n04.jpg", "133n05.jpg"],
+    1.5: ["150n01.jpg", "150n02.jpg", "150n03.jpg", "150n04.jpg", "150n05.jpg"],
+    1.83: ["183n01.jpg", "183n02.jpg"],
+    2: ["200n01.jpg", "200n02.jpg", "200n03.png", "200n04.jfif"],
+    3: ["300n01.jpg"]
+}

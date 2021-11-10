@@ -1,4 +1,4 @@
-import { nouns, verbs, adjectives, adverbs, prepositions } from "../js/data.js";
+import { nouns, verbs, adjectives, adverbs, prepositions, ratioToImages, imagePathPrefix } from "../js/data.js";
 
 const gridSize = 10;
 const px = (v) =>
@@ -119,6 +119,15 @@ function pickOne(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
+function pickOneWeighted(arr, lotteryTotal) {
+  let i = 0, result = Math.random() * lotteryTotal;
+  for(i = 0; i < arr.length; i++) {
+    result -= arr[i].lottery;
+    if(result <= 0) return arr[i];
+  }
+  return arr[i - 1];
+}
+
 function optional(cb, prob) {
   return prob < Math.random() ? cb() + " " : "";
 }
@@ -132,6 +141,20 @@ function generateSentence() {
       nouns
     )}. `
   );
+}
+
+// dimensions = {width: number, height: number}
+function selectImage(dimensions) {
+  let ratio = pn(dimensions.width) / pn(dimensions.height);
+  // Give a weight to each ratio
+  let totalLotteries = 0;
+  let candidates = Object.entries(ratioToImages).map(([key, images])=>{
+    let diff = Math.abs(1 - key / ratio);
+    let lottery = 200 / (diff > 0.7 ? 200 : diff > 0.1 ? diff : 0.01);
+    totalLotteries += lottery;
+    return {lottery: lottery, images: images};
+  });
+  return `${imagePathPrefix}${pickOne(pickOneWeighted(candidates, totalLotteries).images)}`;
 }
 
 function makeDraggable(newspaperElement) {
@@ -498,6 +521,13 @@ function draw() {
   for (let ele of textBoxes) {
     ele.innerHTML = "";
     ele.style.border = "none";
+  }
+
+  for (let ele of imgBoxes) {
+    let img = document.createElement("img");
+    img.setAttribute("src", selectImage({width: ele.clientWidth, height: ele.clientHeight}));
+    img.setAttribute("draggable", false);
+    ele.replaceChildren(img);
   }
 
   let interval = setInterval(() => {
