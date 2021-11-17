@@ -35,6 +35,7 @@ main {
 
 button {
   cursor: pointer;
+  width: auto;
   font-size: 1.5rem;
   color: black;
   border: 1px solid black;
@@ -42,6 +43,7 @@ button {
   padding: 0.5rem 1.5rem;
   background-color: rgba(0,0,0,0);
   transition: all 0.2s;
+  user-select: none;
 }
 
 button:hover {
