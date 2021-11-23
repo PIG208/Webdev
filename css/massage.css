@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@800&family=Lora&display=swap');
+
+body {
+    background-color: black;
+}
+
+#container {
+    overflow: hidden;
+    height: 90vh;
+}
+
+.ditto {
+    font-family: 'Lora', serif;
+    user-select: none;
+    cursor: pointer;
+    color: white;
+    font-size: 3rem;
+}
