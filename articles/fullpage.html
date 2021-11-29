@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf8">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css" integrity="sha512-TD/aL30dNLN0VaHVoh9voFlNi7ZuWQYtV4bkIJv2ulZ8mEEkZJ7IyGvDthMKvIUwzLmPONnjQlAi55HTERVXpw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link href="../css/common.css" rel="stylesheet"/>
+        <link href="../css/fullpage.css" rel="stylesheet"/>
+    </head>
+    <body>
+        <main id="fullpage">
+            <div class="section">3</div>
+            <div class="section">2</div>
+            <div class="section">1</div>
+        </main>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js" integrity="sha512-gSf3NCgs6wWEdztl1e6vUqtRP884ONnCNzCpomdoQ0xXsk06lrxJsR7jX5yM/qAGkPGsps+4bLV5IEjhOZX+gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script type="text/javascript">
+            var main = new fullpage('#fullpage', {
+                sectionsColor: ['#ffcc00', '#62cc62', '#7B66BE'],
+                easing: 'easeInOutCubic',
+                scrollingSpeed: 1200,
+                easingcss3: 'ease',
+                loopBottom: true,
+	            controlArrows: true,
+            });
+        </script>
+    </body>
+</html>

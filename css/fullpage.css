@@ -1,0 +1,14 @@
+body {
+    background-color: white;
+}
+
+main {
+    width: 60vw;
+    max-width: unset;
+}
+
+.section {
+    font-size: 7vw;
+    text-align: center;
+    color: white;
+}
