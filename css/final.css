@@ -1,0 +1,12 @@
+main {
+    max-width: 80vw;
+}
+
+.section {
+    text-align: center;
+}
+
+.code-block {
+    border: solid black 0.5px;
+    padding: 2rem 2rem;
+}
