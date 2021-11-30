@@ -3,19 +3,21 @@
     <head>
         <title>Webdev - PIG208</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.css" integrity="sha512-TD/aL30dNLN0VaHVoh9voFlNi7ZuWQYtV4bkIJv2ulZ8mEEkZJ7IyGvDthMKvIUwzLmPONnjQlAi55HTERVXpw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
         <link href="css/common.css" rel="stylesheet"/>
+        <link href="css/index.css" rel="stylesheet"/>
     </head>
     <body>
         <header>Homepage</header>
-        <main class="overlap-header">
-            <div class="page">
+        <main id="fullpage" class="overlap-header">
+            <div class="section">
                 <div class="big-text">
                     <h1 class="centered">Home</h1>
                 </div>
                 <img src="assets/imgs/dinosaur.png"/>
-                <p>This is the homepage, which is still underconstruction.</p>
+                <p>This is the homepage for the webdev course.</p>
             </div>
-            <div class="page">
+            <div class="section">
                 <h2>Articles</h2>
                 <a href="articles/reflection.html">Reflection</a>
                 <a href="articles/ways_of_seeing.html">Ways of Seeing</a>
@@ -28,15 +30,19 @@
 		        <a href="articles/fullpage.html">Full Page</a>
 		        <a href="articles/final.html">react-brainfucked</a>
             </div>
-            <div class="page">
+            <div class="section">
                 <h2>About Me</h2>
                 <a href="https://github.com/PIG208">GitHub</a>
             </div>
-            <button onclick="loadNext();" class="centered fixed-bottom">Next</button>
         </main>
     </body>
-    <script src="js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/3.1.2/fullpage.min.js" integrity="sha512-gSf3NCgs6wWEdztl1e6vUqtRP884ONnCNzCpomdoQ0xXsk06lrxJsR7jX5yM/qAGkPGsps+4bLV5IEjhOZX+gg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        loadNext();
+        var main = new fullpage('#fullpage', {
+            sectionsColor: ['#white'],
+            easing: 'easeInOutCubic',
+            scrollingSpeed: 600,
+            loopBottom: true,
+        });
     </script>
 </html>

@@ -1,0 +1,27 @@
+.section {
+    text-align:center;
+  }
+  
+  .section a {
+    display: block;
+    color: black;
+    transition: 0.3s all;
+    text-decoration: none;
+    transform: translateX(-0.5rem);
+  }
+  
+  .section a:hover {
+    color: blue;
+    transform: translateX(5px);
+  }
+  
+  .section a::before {
+    content: "> ";
+    color: white;
+    transition: 0.3s color;
+  }
+  
+  .section a:hover::before {
+    color: blue;
+  }
+  
