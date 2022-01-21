@@ -17,11 +17,13 @@
   
   .section a::before {
     content: "> ";
+    display: none;
     color: white;
     transition: 0.3s color;
   }
   
   .section a:hover::before {
+    display: inline;
     color: blue;
   }
   
